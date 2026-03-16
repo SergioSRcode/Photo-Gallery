@@ -24,11 +24,31 @@ class Gallery {
     slides.innerHTML = renderedPhotos;
   }
 
-  renderPhotoInformation(idx) {
+  renderPhotoInformation(photo_id) {
     let information = document.querySelector("#information");
-    let photo = this.photos.find(item => item.id === idx);
+    let photo = this.photos.find(item => item.id === photo_id);
     let photoInformation = templates.photoInformation(photo);
     information.innerHTML = photoInformation;
+  }
+
+  async fetchPhotoComments(photo_id) {
+    try {
+      let path = `comments?photo_id=${photo_id}`;
+      let response = await fetch(this.host + path);
+      let comments = await response.json();
+      if (!Array.isArray(comments)) throw new Error("Couldn't fetch comments");
+
+      return comments;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async renderPhotoComments(photo_id) {
+    let commentSection = document.querySelector("#comments > ul");
+    let comments = await this.fetchPhotoComments(photo_id);
+    let renderedComments = templates.comments(comments);
+    commentSection.innerHTML = renderedComments;
   }
 
   async init() {
@@ -36,6 +56,7 @@ class Gallery {
     let activePhotoId = this.photos[0].id;
     this.renderPhotos();
     this.renderPhotoInformation(activePhotoId);
+    this.renderPhotoComments(activePhotoId)
   }
 }
 
