@@ -127,11 +127,54 @@ class Gallery {
     }
   }
 
+  getURLParams(name, email, comment) {
+    let params = new URLSearchParams();
+    params.set("photo_id", this.activePhotoId);
+    params.set("name", name);
+    params.set("email", email);
+    params.set("body", comment);
+
+    return params.toString();
+  }
+
+  renderNewComment(comment) {
+    let commentsList = document.querySelector("#comments ul");
+    commentsList.insertAdjacentHTML("beforeend", templates.comment(comment));
+  }
+
+  async submitComment(e) {
+    try {
+      e.preventDefault();
+      let form = e.target;
+      let path = "comments/new";
+      let name = document.querySelector("#name").value;
+      let email = document.querySelector("#email").value;
+      let comment = document.querySelector("#body").value;
+      let query = this.getURLParams(name, email, comment);
+
+      let response = await fetch(this.host + path, {
+        method: "POST",
+        headers: {
+          "Content-Type": 'application/x-www-form-urlencoded; charset=utf-8', 
+        },
+        body: query,
+      });
+
+      let data = await response.json();
+      this.renderNewComment(data);
+      form.reset();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   bind() {
     let prev = document.querySelector(".prev");
     let navigationContainer = prev.parentElement.parentElement;
     let information = document.querySelector("#information");
+    let comments = document.querySelector("#comments");
     information.addEventListener("click", (e) => this.incrementAction(e));
+    comments.addEventListener("submit", e => this.submitComment(e));
     navigationContainer.addEventListener("click", e => this.setupNavigation(e, prev));
   }
 
