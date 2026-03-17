@@ -20,6 +20,10 @@ class Gallery {
     }
   }
 
+  async likePhoto() {
+
+  }
+
   renderPhotos() {
     let slides = document.querySelector("#slides");
     let renderedPhotos = templates.photos(this.photos);
@@ -83,20 +87,20 @@ class Gallery {
     }
   }
 
-  setupNavigation() {
+  setupNavigation(e, prev) {
+    e.preventDefault();
+    if (e.target === prev) {
+      this.decrementId(0);
+    } else {
+      this.incrementId(this.photosLength);
+    }
+    this.rerender();
+  }
+
+  bind() {
     let prev = document.querySelector(".prev");
     let navigationContainer = prev.parentElement.parentElement;
-
-    navigationContainer.addEventListener("click", e => {
-      e.preventDefault();
-      if (e.target === prev) {
-        this.decrementId(0);
-      } else {
-        this.incrementId(this.photosLength);
-      }
-
-      this.rerender();
-    });
+    navigationContainer.addEventListener("click", e => this.setupNavigation(e, prev));
   }
 
   rerender() {
@@ -113,7 +117,7 @@ class Gallery {
     this.renderPhotoInformation();
     this.renderPhotoComments();
     this.displayActivePhoto();
-    this.setupNavigation();
+    this.bind();
   }
 }
 
