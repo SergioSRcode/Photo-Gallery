@@ -97,9 +97,41 @@ class Gallery {
     this.rerender();
   }
 
+  async incrementAction(e) {
+    try {
+      e.preventDefault();
+      let element = e.target;
+      let type = element.dataset.property;
+      if (!type) return;
+
+      let dataId = Number(element.dataset.id);
+      let url = element.href;
+      let text = element.textContent;
+
+      let response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+        },
+        body: "photo_id=" + dataId,
+      });
+
+      let data = await response.json();
+      let newTotal = data.total;
+      element.textContent = text.replace(/\d+/, newTotal);
+      
+      let updatedPhoto = this.photos.find(photo => photo.id === dataId);
+      updatedPhoto[type] = newTotal;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   bind() {
     let prev = document.querySelector(".prev");
     let navigationContainer = prev.parentElement.parentElement;
+    let information = document.querySelector("#information");
+    information.addEventListener("click", (e) => this.incrementAction(e));
     navigationContainer.addEventListener("click", e => this.setupNavigation(e, prev));
   }
 
