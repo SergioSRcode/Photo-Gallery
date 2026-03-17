@@ -194,4 +194,5 @@ textarea {
 
 #slides > figure.active {
   opacity: 100%;
+  transition-duration: 800ms;
 }
