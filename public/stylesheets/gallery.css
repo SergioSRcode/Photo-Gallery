@@ -68,8 +68,11 @@ a.favorite {
   height: 784px;
 }
 
-#slides figure + figure {
-  display: none;
+/* #slides figure + figure {
+  opacity: 0%;
+} */
+#slides figure {
+  opacity: 0%;
 }
 
 #slides img {
@@ -187,4 +190,8 @@ input[type="email"] {
 textarea {
   border: 1px solid #cecece;
   border-radius: 4px;
+}
+
+#slides > figure.active {
+  opacity: 100%;
 }
