@@ -76,7 +76,7 @@ class Gallery {
   decrementId(min = 0) {
     this.activePhotoId -= 1;
     if (this.activePhotoId <= min) {
-      this.activePhotoId = 3;
+      this.activePhotoId = this.photosLength;
     }
   }
 
