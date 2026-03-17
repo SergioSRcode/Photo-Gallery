@@ -193,6 +193,6 @@ textarea {
 }
 
 #slides > figure.active {
-  opacity: 100%;
+  opacity: 1;
   transition-duration: 800ms;
 }
